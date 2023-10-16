@@ -1,0 +1,120 @@
+
+Salom, Oleg! Sizning vazifangizni bajarish uchun Python va Django freamworkdan foydalanib, to'liq ishlaydigan bir "Todo" ilovasi yaratishimiz mumkin. Ishni bajarish uchun quyidagi qadamlarni o'tamiz.
+
+Django loyihasi yaratish:
+Bir Django proyekti yaratib uni ishga tushiramiz:
+
+bash
+Copy code
+django-admin startproject todoproject
+"Todo" ilovasi uchun Django ilovalarni qo'shish:
+
+bash
+Copy code
+cd todoproject
+python manage.py startapp todo
+"Todo" ilovasi modelini yaratish:
+todo/models.py faylini ochib quyidagi modelni yaratamiz:
+
+python
+Copy code
+from django.db import models
+from django.contrib.auth.models import User
+
+class Todo(models.Model):
+    text = models.TextField()
+    expires_at = models.DateTimeField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+Bu modelni "makemigrations" va "migrate" komandalari orqali bazaga qo'shishimiz kerak:
+
+bash
+Copy code
+python manage.py makemigrations
+python manage.py migrate
+Django admin panelini sozlash:
+todo/admin.py faylini ochib, "Todo" modelini admin paneliga qo'shishimiz kerak:
+
+python
+Copy code
+from django.contrib import admin
+from .models import Todo
+
+admin.site.register(Todo)
+Url-larni yaratish:
+todo/urls.py faylini yaratib, "Todo" ilovasi uchun URL-larni sozlaymiz:
+
+python
+Copy code
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.todo_list, name='todo_list'),
+    path('add/', views.add_todo, name='add_todo'),
+    path('edit/<int:todo_id>/', views.edit_todo, name='edit_todo'),
+    path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
+]
+Views yaratish:
+todo/views.py faylini ochib, views-larni yaratamiz:
+
+python
+Copy code
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Todo
+from .forms import TodoForm
+
+def todo_list(request):
+    todos = Todo.objects.filter(owner=request.user)
+    return render(request, 'todo/todo_list.html', {'todos': todos})
+
+def add_todo(request):
+    if request.method == 'POST':
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.owner = request.user
+            todo.save()
+            return redirect('todo_list')
+    else:
+        form = TodoForm()
+    return render(request, 'todo/todo_form.html', {'form': form})
+
+def edit_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, owner=request.user)
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            form.save()
+            return redirect('todo_list')
+    else:
+        form = TodoForm(instance=todo)
+    return render(request, 'todo/todo_form.html', {'form': form, 'todo': todo})
+
+def delete_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, owner=request.user)
+    todo.delete()
+    return redirect('todo_list')
+Form yaratish:
+todo/forms.py faylini ochib, "Todo" modeli uchun formani yaratamiz:
+
+python
+Copy code
+
+HTML shablonlarni yaratish:
+HTML shablonlar "todo/templates/todo/" papkasida joylashadi. Sizning kerakli shablonlaringizni yaratib, ularga mos bo'lgan yo'l orqali ma'lumotlarni ko'rsating.
+
+Ma'lumotni ko'rsatish uchun HTML shablonlarda "Todo" modelining ma'lumotlarini ko'rsatishga ega bo'lgan mos holatda HTML-ni yarating.
+
+Ilovani ishga tushirish:
+Ilovaning boshqarilishini boshlash uchun serverni ishga tushirish uchun quyidagi komandalarni ishga tushiring:
+
+bash
+Copy code
+python manage.py runserver
+Endi, brauzeringizda "http://localhost:8000" manzilini oching va "Todo" ilovasini ishlatishni boshlang.
+
+Bu sizni "Todo" ilovasini yaratish uchun boshlang'ich tajribangizni boshlash uchun yordam berishi kerak bo'lgan boshlang'ich qadamlar. Ilovangizni talqin qilish, test qilish va ko'proq funktsiyalar qo'shish uchun qo'shimcha o'zgartirishlar kiritishingiz mumkin.
+
+
+
+
