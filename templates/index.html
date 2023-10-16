@@ -1,14 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
 
 
 
 
+{% block content %}
+
+
+    <!--================ Hero banner start =================-->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row no-gutters align-items-center pt-60px">
+                <div class="col-5 d-none d-sm-block">
+                    <div class="hero-banner__img">
+                        <img class="img-fluid" src="{% static 'img/home/img.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
+                    <div class="hero-banner__content">
+                        <h4>ToDo is fun</h4>
+                        <h1>Browse Our Premium ToDo</h1>
+                        <p>You can save ToDo here</p>
+                        <a class="button button-hero" href="#">Browse Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ Hero banner start =================-->
+
+    <!--================ Hero Carousel start =================-->
+    <section class="section-margin mt-0">
+        <div class="owl-carousel owl-theme hero-carousel">
+            <div class="hero-carousel__slide">
+                <img src="img/home/hero-slide1.png" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+            <div class="hero-carousel__slide">
+                <img src="img/home/hero-slide2.png" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+            <div class="hero-carousel__slide">
+                <img src="img/home/hero-slide3.png" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!--================ Hero Carousel end =================-->
+
+    <!-- ================ trending product section start ================= -->
+    {% if user.is_authenticated %}
+        <section class="section-margin calc-60px">
+        <div class="container">
+        <div class="section-intro pb-60px">
+            <p>TODO APP</p>
+            <h2>YOUR <span class="section-intro__style">TODO</span></h2>
+        </div>
+        <div class="row">
+        {% for product in products %}
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card text-center card-product">
+                    <div class="card-product__img">
+                        <ul class="card-product__imgOverlay">
+                            <p>{{ product.text }}</p>
+                            <li>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ product.id }}">
+                                    <button class="btn btn-sm btn-danger" type="submit"><i
+                                            class="fa fa-times"></i>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ product.expires_at }}</p>
+                        <h4 class="card-product__title"><a href="single-product.html">{{ product.user }}</a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!-- ================ trending product section end ================= -->
+    {% else %}
+        <li class="nav-item"><a class="button button-header" href="/accounts/login">Login</a></li>
+    {% endif %}
+
+
+{% endblock %}

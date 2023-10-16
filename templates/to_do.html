@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    <!--================ Hero banner start =================-->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row no-gutters align-items-center pt-60px">
+                <div class="col-5 d-none d-sm-block">
+                    <div class="hero-banner__img">
+                        <img class="img-fluid" src="{% static 'img/home/img.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
+                    <div class="hero-banner__content">
+                        <h4>ToDo is fun</h4>
+                        <h1>Browse Our Premium ToDo</h1>
+                        <p>You can save ToDo here</p>
+                        <a class="button button-hero" href="#">Browse Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ Hero banner start =================-->
+
+    <!--================ Hero Carousel start =================-->
+    <section class="section-margin mt-0">
+        <div class="owl-carousel owl-theme hero-carousel">
+            <div class="hero-carousel__slide">
+                <img src="{% static 'img/home/hero-slide1.png' %}" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+            <div class="hero-carousel__slide">
+                <img src="{% static 'img/home/hero-slide2.png' %}" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+            <div class="hero-carousel__slide">
+                <img src="{% static 'img/home/hero-slide3.png' %}" alt="" class="img-fluid">
+                <a href="#" class="hero-carousel__slideOverlay">
+                    <h3>Wireless Headphone</h3>
+                    <p>Accessories Item</p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!--================ Hero Carousel end =================-->
+
+    <!-- ================ trending product section start ================= -->
+
+    <!-- Ma'lumotlarni chiqarish -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <div class="section-intro pb-60px">
+                <p>TODO APP</p>
+                <h2>YOUR <span class="section-intro__style">TODO</span></h2>
+            </div>
+            <div class="row">
+                <ul class="product-list">
+                    {% for product in products %}
+                        <li class="product-item">
+                            <div class="product-info">
+                                <h3>{{ product.text }}</h3>
+                                <p class="expires-at">Expires at: {{ product.expires_at }}</p>
+                                <p class="user">User: {{ product.user }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            /* CSS qismi */
+            .product-list {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .product-item {
+                border: 1px solid #ccc;
+                padding: 20px;
+                margin: 10px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .product-info {
+                text-align: left;
+            }
+
+            .expires-at, .user {
+                font-size: 14px;
+                color: #888;
+            }
+
+        </div>
+    </section>
+
+
+
+    <!-- ToDo o'chirish uchun shakl -->
+    <section class="section-margin calc-60px">
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <label for="id">ID of ToDo to delete:</label>
+                <input type="number" id="id" name="id" required>
+                <button type="submit">Delete ToDo</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ================ trending product section end ================= -->
+{% endblock %}
